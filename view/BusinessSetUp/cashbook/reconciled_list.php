@@ -1,0 +1,187 @@
+  <?php 
+	if($page['add_status']!="Active"){
+		//header("Location: ".$mainLink);
+		echo'<script>window.location="'.$mainLink.'";</script>';
+		return 0;
+		
+		}
+		
+		if(isset($_POST["submit"])){
+		 $fdate=$_POST['fdate'];
+		 $tdate=$_POST['tdate'];
+		 $bank=$_POST['bank'];
+		 
+	    $sql_b="SELECT account_number,balance FROM `bank_ac` where account_number='$bank'";			
+	    $db_obj->sql($sql_b);
+	    $bank_name_bal=$db_obj->getResult();
+		$account_number = $bank_name_bal[0]['account_number'];
+		$balance = $bank_name_bal[0]['balance'];
+		 
+		 $sqld="SELECT * FROM `tbl_deposit_balance` where com_bank_ac='$bank' AND recon_status='1' AND `date` BETWEEN '$fdate' AND '$tdate'";
+		 $db_obj->sql($sqld);
+		 $deposit_re_bal=$db_obj->getResult();
+		 
+		 $sqlw="SELECT id,code,date,type,des,recon_log,com_bank_ac,payment as receipt,withdraw_amt as deposit_amt FROM `tbl_withdraw_balance` where com_bank_ac='$bank' AND recon_status='1' AND `date` BETWEEN '$fdate' AND '$tdate'";
+		 $db_obj->sql($sqlw);
+		 $withdraw_re_bal=$db_obj->getResult();
+		 $sqlbp="SELECT id,code,trans_date as date,type,des,recon_log,bank_id as com_bank_ac,receipt_type as receipt,payment_amt as deposit_amt FROM `tbl_bank_payment` where bank_id='$bank' AND recon_status='1' AND `trans_date` BETWEEN '$fdate' AND '$tdate'";
+		 $db_obj->sql($sqlbp);
+		 $broker_pay=$db_obj->getResult();
+		 $sqlbr="SELECT id,code,trans_date as date,type,des,recon_log,bank_id as com_bank_ac,receipt_type as receipt,receipt_amt as deposit_amt FROM `tbl_bank_receipt` where bank_id='$bank' AND recon_status='1' AND `trans_date` BETWEEN '$fdate' AND '$tdate'";
+		 $db_obj->sql($sqlbr);
+		 $broker_rec=$db_obj->getResult();
+		 
+		 $sqlbank="SELECT id,code,trans_date as date,type,des,recon_log,tbank_ac_no as com_bank_ac,receipt_type as receipt,total_amt as deposit_amt FROM `tbl_bank_transfer` where tbank_ac_no='$bank' AND recon_status='1' AND `trans_date` BETWEEN '$fdate' AND '$tdate'";
+		 $db_obj->sql($sqlbank);
+		 $bank_to_bank=$db_obj->getResult();
+		
+		  $result=(array_merge($deposit_re_bal,$withdraw_re_bal,$broker_pay,$broker_rec,$bank_to_bank));
+		  // print_r($result);
+		}
+		
+	?>
+
+    
+    <div class="contentinner">
+
+
+     <?php
+
+          if(@$_SESSION['in_result_data']){
+
+            echo $_SESSION['in_result_data'];
+            unset($_SESSION['in_result_data']);
+          }
+
+
+
+           if($page['view_status']=="Active"):
+					?>
+    <div align="right"><a href="?reconciliation" class="btn alert-info"><span class="icon-th-large"></span>Pannding Reconciliation</a></div>
+                     <?php endif;?>
+   <h4 class="widgettitle">Reconciled Transaction List</h4>
+                
+  
+   <form class="form-inline" action="" method="post">
+   <div class="form-group">
+    <label for="email">From: </label>
+    <input type="date" id="fdate" name="fdate" required />
+  </div>
+  <div class="form-group">
+    <label for="pwd">To: </label>
+    <input type="date" id="tdate" name="tdate" required />
+  </div>
+  <div class="form-group">
+      <label for="sel1">Cashbook A/C:</label>
+      <select class="form-control" name="bank" required="required">
+        <option value="">SELECT</option>
+         <?php
+	 $sql="SELECT * FROM `bank_ac`";
+					
+					 $db_obj->sql($sql);
+					 $bank_name=$db_obj->getResult();
+					 //print_r($company_name);
+					//die();
+  //if($company_name){
+						
+	foreach($bank_name as $bank){
+	?>
+	 <option value="<?php echo $bank['account_number'];?>"><?php echo $bank['id'].":".$bank['bank_name']."(".$bank['account_number'].")"; ?></option>
+	<?php } ?>
+      </select>
+      
+    </div>
+ <p><strong>A/C No : </strong><?php echo @$account_number; ?></p>
+ <p><strong>Opening Balance : </strong><?php echo @$balance; ?></p>
+  
+  <button type="submit" name="submit" class="btn btn-default">Apply</button>
+</form>
+<h4 class="widgettitle" style="text-align: center;">Bank Reconciled</h4>
+<br>
+
+
+<style>
+.my-custom-scrollbar {
+position: relative;
+height: 300px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
+
+/* The container must be positioned relative: */
+.custom-select {
+  position: relative;
+  font-family: Arial;
+}
+
+#fee{
+ height:40px;   
+}
+</style>
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+  <table class="table table-bordered table-striped mb-0">
+    <thead>
+      <tr>
+        <th>Is Select</th>
+        <th scope="col">Date</th>
+        <th scope="col">Type</th>
+        <th scope="col">Description</th>
+		 <th scope="col">Pay/Rec Type</th>
+		  <th scope="col">Debit</th>
+		   <th scope="col">Credit</th>
+		    <th scope="col">Balance</th>
+			<th scope="col">Reconciled By</th>
+      </tr>
+    </thead>
+	
+    <tbody>
+	<?php
+	if(@$result){
+	foreach(@$result as $res){
+		//print_r($res);
+	?>
+      <tr>
+	  <td><input type="checkbox" name="check[ ]"  multiple="multiple" value="" checked></td>
+        
+        <td><?php echo $res['date'];?></td>
+        <td><?php echo $res['code'];?></td>
+		<td><?php echo $res['des'];?></td>
+		<td><?php echo $res['receipt'];?></td>
+		<td>
+		<?php if($res['type']=='Receipt'){
+		  echo $res['deposit_amt'];
+		}else{
+		  echo '0.00';
+		}
+		?>
+		</td>
+		<td>
+		<?php if($res['type']=='Payment'){
+		  echo $res['deposit_amt'];
+		}else{
+		 echo '0.00';
+		}
+		?>
+		</td>
+		<td><?php echo $res['deposit_amt'];?></td>
+		<td><?php echo $res['recon_log'];?></td>
+		
+      </tr>
+	  <?php
+	}
+	}
+	?>
+    </tbody>
+  </table>
+
+</div>
+  
+
+              
+                     
+ 
+                <!--widgetcontent-->          
+                  </div>
+<!--contentinner-->

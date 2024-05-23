@@ -1,0 +1,12 @@
+[17-Dec-2016 10:40:28 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng.php on line 44
+[18-Jan-2017 20:38:34 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_student_exam_mark.php on line 50
+[01-Mar-2017 07:21:46 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/PrintLandscape_Eng_Paper_Print.php on line 54
+[25-Apr-2017 19:50:23 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
+[25-Apr-2017 23:11:10 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
+[14-May-2017 06:34:32 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/PrintLandscape_Eng_Paper_Print.php on line 54
+[26-May-2017 17:28:13 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
+[15-Jun-2017 01:45:23 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/PrintLandscape_Eng_Paper_Print.php on line 54
+[26-Jun-2017 09:59:45 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
+[27-Jul-2017 08:37:14 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
+[27-Aug-2017 10:35:59 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
+[27-Sep-2017 09:18:47 America/New_York] PHP Notice:  Undefined index: selLayer in /home/netpromodelschoo/public_html/includes/print_page/Print_a4_Eng_card.php on line 61
